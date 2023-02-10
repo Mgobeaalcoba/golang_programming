@@ -1,0 +1,28 @@
+En consola con el comando 
+
+go build nombre_archivo.ext 
+
+compilamos el archivo .go y creamos un ejecutable binario
+que aparecerá en el mismo path. 
+
+luego ejecutamos por consola el main.exe compilado así:
+
+./main
+
+o así: 
+
+.\main.exe
+
+Y se reproduce en consola el ...
+
+Hola Mundo
+
+------------------------------------------------
+
+Si quiero compilar y ejecutar en un solo comando entonces: 
+
+go run main.go
+
+y...
+
+Hola Mundo
