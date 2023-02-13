@@ -35,5 +35,6 @@ func main() {
 	fmt.Scanln(&nombre) // Capturo en la variable nombre, ya inicializada lo que recibo por consola.
 
 	println()
+	
 	println("Otro nombre", nombre)
 }

@@ -26,3 +26,7 @@ go run main.go
 y...
 
 Hola Mundo
+
+-------------------------------------------------
+
+Dentro de un mismo proyecto/paquete no debo repetir los nombres de las funciones. Si deseo hacer eso tengo que crear subcarpetas adentro del proyecto. Y Golang va a entender a cada carpeta como un paquete. 
