@@ -1,0 +1,49 @@
+Estructuras en Go = Clases en Python o JavaScript
+
+De las estructuras se generan objetos. 
+
+Componentes de la POO en Go:
+
+1- Struct o Molde
+
+2- Propiedades o Atributos
+
+3- Métodos o Comportamiento
+
+4- Objetos. 
+
+Pilares de la POO:
+
+1- Encapsulamiento
+
+2- Abstracción
+
+3- Herencia
+
+4- Polimorfismo
+
+Los objetos son aquellos que tienen propiedades (atributos) y comportamientos
+
+Ejemplos: 
+
+Objeto: Auto
+
+Propiedades: Nombre, Color, Modelo, Tamaño, Forma
+
+Comportamiento: Mover, Frenar, Girar a la derecha, Girar a la izquierda
+
+Las structs o estructuras, son las clases en otros lenguajes como python y son los moldes sobre los cuales construiremos nuestros objetos. 
+
+¿Que es entonces la abstracción? 
+
+Es analizar los objetos que tenemos para crear clases o estructuras y poder, con ello, construir luego mas objetos. 
+
+Ejemplo: Tengo 3 rombos de tres colores disintos. Todos son rombos, pero varia el color. Puedo abtraer cada objeto en una estructura donde el color sea variable. 
+
+¿Que compone a una estructura en Go? 
+
+Su nombre (Nombre), sus atributos (Estado) y sus metodos (Comportamiento)
+
+----------------------------------------------------------------------
+
+Las estructuras en Go se pueden relacionar. Ver 03-relaciones
