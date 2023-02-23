@@ -1,0 +1,41 @@
+Para crear paquetes en golang y poder usarlos tenemos que poner por consola:
+
+go mod init paquetes
+
+C:\Users\mgobea\go\src\CURSO-GOLANG\07-MODULARIZACION(main -> origin)
+λ go mod init paquetes
+go: creating new go.mod: module paquetes
+go: to add module requirements and sums:
+        go mod tidy
+
+De esta forma se genera un archivo go.mod en la raiz donde lo creamos. En este caso 07-MODULARIZACION. Que le pone un nombre corto a esa ruta. En este caso paquetes. 
+
+Luego puedo importar el paquete de allí dentro poniendo por ejemplo:
+
+import paquetes/mensajes
+
+-------------------------------------------------------------
+
+Modificadores de acceso para nuestros paquetes: 
+
+En Kotlin: Public / Private, etc. 
+
+Si quiero que una función sea privada la declaro en minuscula. 
+
+Si quiero que una función sea publica la declaro en mayuscula. 
+
+privada significa que solo puedo acceder desde el propio paquete donde está el archivo
+
+por ejemplo si dentro de "mensajes" creo un segundo archivo llamado "saludar2" podría acceder a las variables privadas de "saludar" pero por fuera del paquete no lo puedo hacer. 
+
+-------------------------------------------------------------
+
+Lecciones de la practica de modularizado: 
+
+Si voy a consumir struct o interfaces desde otros modulos, tanto las structs como sus atributos y sus metodos deben comenzar con letra mayuscula para que puedan ser accedidos desde fuera del modulo. 
+
+Caso contrario fracasará. 
+
+Ver src/CURSO-GOLANG/RetoModularizado para mas detalle. 
+
+Allí resolví el mismo reto que en src/CURSO-GOLANG/Retos/04-uso-interfaces pero en lugar de un solo archivo lo hice modularizando de forma profesional y efectiva. 
