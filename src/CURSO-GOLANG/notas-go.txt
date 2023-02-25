@@ -122,3 +122,29 @@ Caso contrario fracasará.
 Ver src/CURSO-GOLANG/RetoModularizado para mas detalle. 
 
 Allí resolví el mismo reto que en src/CURSO-GOLANG/Retos/04-uso-interfaces pero en lugar de un solo archivo lo hice modularizando de forma profesional y efectiva. 
+
+------------------------------------------------------------
+
+Paso a paso para subir un modulo a github y que luego pueda ser importado por otros: 
+
+1- Creo un repositorio en github
+2- Creo la estructura de mi modulo independiente de otros archivos. Por ej: en geometrics puse los files con las structs de cuadrado y circulo ademas de la interface para manejar sus metodos compartidos. 
+3- Luego voy a la terminal y: 
+
+➜ echo "# geometrics_golang" >> README.md
+
+➜ git init
+
+➜ go mod init github.com/Mgobeaalcoba/geometrics_golang // Importante acá ponerle el nombre de la ruta de github, sin el html delante ni el .git detras. 
+
+➜ git add .
+
+➜ gitmoji -c | git commit -m "v1: geometrics golang module"
+
+➜ git branch -M main
+
+➜ git remote add origin git@github.com:Mgobeaalcoba/geometrics_golang.git
+
+➜ git push -u origin main
+
+// Modulo cargado :)

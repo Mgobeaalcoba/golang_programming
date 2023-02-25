@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"paquetes/models" // Importo un paquete propio luego de activarlo con go mod init ...
 
-	"github.com/donvito/hellomod" // Importo un paquete de terceros luego de instalarlo con go get...
+	figuras "github.com/Mgobeaalcoba/geometrics_golang" // Importo mi propio modulo subido a github
+	"github.com/donvito/hellomod"                       // Importo un paquete de terceros luego de instalarlo con go get...
 )
 
 func main() {
@@ -59,6 +60,13 @@ func main() {
 	*/
 
 	hellomod.SayHello() // Uso una función del paquete descargado.
+
+	cir1 := figuras.Circulo{Radio: 10.2, Pi: 3.14}
+
+	fmt.Println(cir1)
+
+	fmt.Print("El area de mi circulo es: ")
+	fmt.Println(figuras.CalculoDeArea(&cir1))
 
 }
 
