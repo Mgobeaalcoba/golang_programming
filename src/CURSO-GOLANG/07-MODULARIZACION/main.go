@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
-	"paquetes/models"
+	"paquetes/models" // Importo un paquete propio luego de activarlo con go mod init ...
+
+	"github.com/donvito/hellomod" // Importo un paquete de terceros luego de instalarlo con go get...
 )
 
 func main() {
@@ -55,6 +57,8 @@ func main() {
 
 		// Tengo que correr la función privada desde el propio archivo saludar.go u otro archivo del paquete mensajes para que se use esa función.
 	*/
+
+	hellomod.SayHello() // Uso una función del paquete descargado.
 
 }
 

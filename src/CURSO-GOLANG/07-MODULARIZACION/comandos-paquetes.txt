@@ -39,3 +39,29 @@ Caso contrario fracasará.
 Ver src/CURSO-GOLANG/RetoModularizado para mas detalle. 
 
 Allí resolví el mismo reto que en src/CURSO-GOLANG/Retos/04-uso-interfaces pero en lugar de un solo archivo lo hice modularizando de forma profesional y efectiva. 
+
+----------------------------------------------------
+
+Importar modulos de terceros en Golang: 
+
+Ejemplo con modulo "hellomod" de donvito:
+
+Si no tengo un archivo go.mod creado entonces previamente debo: 
+
+$ go mod init hello // el hello puede cambiar. En mi caso por paquetes.
+
+$ go get github.com/donvito/hellomod
+
+// Este comando crea en go.mod: 
+
+require github.com/donvito/hellomod v1.0.1 // indirect
+
+y tambien se crea el archivo go.sum que trae la modularización del paquete descargado. 
+
+Luego: 
+
+$ go build
+
+$ ./hello
+
+Hello World
