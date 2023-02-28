@@ -1,0 +1,3 @@
+Prueba a servidores para ver si esos servidores están funcionando o no.
+
+Esto lo vamos a hacer con concurrencia y sin concurrencia para notar la diferencia. 
