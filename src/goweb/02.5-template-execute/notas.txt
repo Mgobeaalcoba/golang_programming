@@ -1,0 +1,3 @@
+Execute template nos permite guardar un unico template que nos posibilita luego acceder desde el mismo a todos nuestros HTML a renderizar. 
+
+Con Execute vamos a poder guardar nuestra variable anterior "template" como "templates" y con alcance global por fuera del Handler para luego utilizar todos sus posibles templates desde cada Handler a partir de la función de Golan "Execute template"
