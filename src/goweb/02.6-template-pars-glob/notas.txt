@@ -1,0 +1,11 @@
+ParseGlob, a diferencia de ParseFiles nos permite cargar todas las direcciones HTML que están dentro de un directorio. Esto ahorra tiempo de trabajo al no tener que estar cargando cada HTML de a uno separados por comas como haciamos con con ParseFiles.
+
+Primero debo crear una carpeta "templates" donde voy a guardar todos mis templates.html allí dentro. 
+
+Luego completo el ParseGlob de la siguiente manera: 
+
+ParseGlob("templates/*.html")
+
+Si tengo subdirectorios dentro de mi carpeta temlates entonces en ParseGlob debo agregar la existencia de los mismos de la siguiente forma: 
+
+ParseGlob("templates/**/*.html")
