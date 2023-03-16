@@ -1,0 +1,30 @@
+¿A que llamamos archivos estaticos? 
+
+A archivo CSS, JavaScript e imagenes. 
+
+Con Go podemos trabajar con este tipo de archivos tambien. 
+
+Para ello debemos hacer algunas configuraciones: 
+
+Antes que nada creo en la raiz del proyecto mi carpeta donde voy a estar cargando todos mis archivos estaticos a la que por convención podemos llamar: "static"
+
+1- en la función main debo crear mi variable de archivos estaticos: 
+
+staticFile := http.FileServer(http.Dir("static"))
+
+2- en la función main tmb debo crear mi Mux de static file:
+
+mux.Handle("/static/", http.StripPrefix("/static/", staticFile))
+
+3- Con esta configuración ya realizada para leer los archivos estaticos podemos entonces conectarlos de forma directa en nuestro/s archivo/s html
+
+Tmb podemos trabajar con la librería de estilos e interacciones de bootstrap con golang. Para eso debemos copiar y pegar el cdn de bootstrap que nos interesa antes de la etiqueta de estilos de nuestro base.html
+
+Ej de cdn a pegar: 
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+Toda la configuración descripta arriba para trabajar con nuestros PROPIOS archivos estaticos NO es necesaria si vamos a trabajar con CDN´s de bootstrap. 
+
+Importado bootstrap puedo usar sus clases para dar estilo directamente en mi HTML!!! (Fantastico!)
+
