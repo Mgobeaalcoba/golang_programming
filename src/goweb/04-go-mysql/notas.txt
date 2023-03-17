@@ -1,0 +1,35 @@
+En esta unidad vamos a conectar nuestra aplicación con una base de datos. 
+
+1- Primero debemos tener algún gestor de base de datos con el cual vamos a crear y operar nuestras databases. En este caso vamos a trabajar con MySQL. Otra posibilidad relacional puede ser PostgreSQL y no relacional Firebase o Mongo DB. 
+
+2- Creamos en MySQL una database que almacenará todo nuestro modelo de datos. En este caso la llamamos goweb_db. 
+- create database goweb_db;
+- show databases; (vemos las databases en nuestro gestor)
+
+3- Iniciamos un modulo en nuestra carpeta raiz del proyecto con:
+- go mod init "nombre" (en este caso gomysql)
+
+4- Importamos el paquete para trabajar con nuestro gestor de base de datos (MySQL). Para ello buscamos en go.org el paquete database/sql y luego en la seccion de sqldrivers buscamos el repo de los drivers del motor que vamos a utilizar. 
+
+5- Los instalmos usando go get: 
+- go get -u github.com/go-sql-driver/mysql
+(Ojo! Sin haber armado el go.mod previamente el go get no funciona!!!)
+
+Y tenemos el modulo listo para utilizar. 
+
+6- Armo una subcarpeta "db" dentro de ella un archivo database.go que forma parte del paquete "db" y que contendrá todo el codigo de conexión con mi database. 
+Es importante que en este archivo ademas de importar la librería descargada importe los drivers para conectarme de esta forma: 
+
+import (
+	"database/sql"
+
+	_ "github.com/go-sql-driver/mysql" //Necesario para importar los drivers
+)
+
+--------------------------------------------
+
+Podemos crear tablas directamente desde Golang. En lugar de tener que crearlas desde nuestro motor de bases.
+
+db.Exec() Metodo para crear tablas
+
+db.Query() Metodo para ejecutar Querys en mi motor MySQL desde mi codigo Golang
