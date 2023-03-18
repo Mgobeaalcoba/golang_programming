@@ -425,3 +425,11 @@ Reviso entonces los registros que me quedan:
 ]
 
 Y efectivamente el 8 fue eliminado. 
+
+----------------------------------------
+
+Luego podemos armar un modelo de respuesta mas completo con responde.go donde no solo vamos a devolver la data sino que también vamos a devolver el status y un mensaje en función de si la solicitud tuvo exito o no lo tuvo. Para eso armamos primero la struct response en: 
+
+models/response.go
+
+Y luego debo adaptar el codigo de mis handlers. El viejo codigo lo voy a conservar también en un nuevo paquete llamado HandlersWithoutResponse

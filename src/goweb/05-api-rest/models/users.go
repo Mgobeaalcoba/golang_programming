@@ -70,31 +70,46 @@ func (user *User) Delete() {
 }
 
 // Listar TODOS los registros de mi table/base de datos:
-func ListUsers() Users {
+func ListUsers() (Users, error) {
 	sql := "SELECT id, username, password, email FROM goweb_db.users;"
 	users := Users{}
-	rows, _ := db.Query(sql) // Rows es un iterable que se logra iterar con el metodo .Next() de "database/sql"
-
-	for rows.Next() {
-		user := User{}
-		rows.Scan(&user.Id, &user.UserName, &user.Password, &user.Email)
-		users = append(users, user)
+	if rows, err := db.Query(sql); err != nil {
+		return nil, err
+	} else {
+		for rows.Next() {
+			user := User{}
+			rows.Scan(&user.Id, &user.UserName, &user.Password, &user.Email)
+			users = append(users, user)
+		}
+		return users, nil
 	}
+	/*
+		rows, err := db.Query(sql) // Rows es un iterable que se logra iterar con el metodo .Next() de "database/sql"
 
-	return users
+		for rows.Next() {
+			user := User{}
+			rows.Scan(&user.Id, &user.UserName, &user.Password, &user.Email)
+			users = append(users, user)
+		}
+
+		return users, err
+	*/
 }
 
 // Obtener SOLAMENTE un registro:
-func GetUser(id int) *User {
+func GetUser(id int) (*User, error) {
 	user := NewUser("", "", "")
 
 	sql := "SELECT id, username, password, email FROM goweb_db.users WHERE id=?;" // Filtro con el WHERE de sql para traerme solo el id que me interesa.
 
-	rows, _ := db.Query(sql, id) // Mando el SQL y el id que debe buscar en la query
+	if rows, err := db.Query(sql, id); err != nil {
+		return nil, err
+	} else {
+		for rows.Next() {
+			rows.Scan(&user.Id, &user.UserName, &user.Password, &user.Email) // Le cargo todos los datos al objeto vacio que cree arriba
+		}
 
-	for rows.Next() {
-		rows.Scan(&user.Id, &user.UserName, &user.Password, &user.Email) // Le cargo todos los datos al objeto vacio que cree arriba
+		return user, nil
 	}
 
-	return user
 }

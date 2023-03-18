@@ -106,7 +106,9 @@ func TruncateTable(tableName string) {
 
 // Polimorfismo de Exec (db.Exec() de la librería "database/sql"):
 func Exec(query string, args ...interface{}) (sql.Result, error) {
+	Connect()
 	result, err := db.Exec(query, args...)
+	Close()
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -116,7 +118,9 @@ func Exec(query string, args ...interface{}) (sql.Result, error) {
 
 // Polimorfismo de Query (db.Query() de la librería "database/sql"):
 func Query(query string, args ...interface{}) (*sql.Rows, error) {
+	Connect()
 	rows, err := db.Query(query, args...)
+	Close()
 	if err != nil {
 		fmt.Println(err)
 	}

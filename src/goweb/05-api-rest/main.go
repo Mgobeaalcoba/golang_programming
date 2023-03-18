@@ -34,6 +34,7 @@ func main() {
 
 	// SERVIDOR:
 
+	//log.Fatal(http.ListenAndServe("localhost:5007", mux)) // usado para handlerssinresponse
 	log.Fatal(http.ListenAndServe("localhost:5007", mux))
 
 }
