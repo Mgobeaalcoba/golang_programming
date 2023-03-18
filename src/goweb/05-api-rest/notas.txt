@@ -1,0 +1,427 @@
+Thunder Client y Postman: Son usados para probar las API´s del lado del cliente. 
+
+Gorilla Mux (Librería de Golang): Es usado para gestionar de forma eficiente nuestros mux y poder crear endpoints.
+
+Thunder Client es basicamente tener Postman en nuestro Visual Studio Code. La gloria!!!
+
+Pasos para armar nuestro proyecto de Api-Rest: 
+
+1- Creo mi carpeta madre. En este caso API-REST. 
+2- Armo dentro de ella mi carpeta "db" con mi file de conexión a mi database SQL con la que vengo trabajando desde la unidad pasada. Es decir la database "goweb_db"
+3- Armo dentro de la carpeta madre otra carpeta con mis "models" donde entre otros voy a tener la struct user con todos sus metodos, funciones anexas y listas, etc tal como armamos en la unidad pasada. 
+4- Armo mi go.mod con el comando:
+ go mod init apirest
+5- Importo la Librería "gorilla/mux" de golang así: 
+ go get -u github.com/gorilla/mux
+(Ojo: Si no armé antes el go.mod no voy a poder hacer get de mi librería. Esto es una condición nueva de trabajo en Golang.)
+6- Importo los drivers para trabajar con MySQL dado que sino mi archivo de database.go no va a funcionar: 
+ go get -u github.com/go-sql-driver/mysql
+7- Vamos a crear nuestro servidor y vamos a levantar nuestro endpoint en el archivo main.go
+-- Los endpoints son similares a los mux, porque los endpoint son las rutas y a esas rutas se les asocia un handler
+
+----------------------------------------------------------
+
+"Un "mux" es un dispositivo electrónico que se utiliza para combinar múltiples señales en una sola línea de transmisión, mientras que un "endpoint" es un término general que se refiere a un dispositivo o una aplicación que se comunica con una red o un sistema.
+
+Ambos términos se utilizan comúnmente en el contexto de las redes de comunicaciones, como la internet. Los "mux" pueden usarse para combinar múltiples señales de red en una sola línea de transmisión, lo que puede reducir el costo y la complejidad de la red. Por otro lado, los "endpoints" son los dispositivos o aplicaciones que se comunican con la red, como computadoras, smartphones, servidores y otros dispositivos conectados a internet.
+
+La similitud entre ambos es que ambos términos se utilizan para describir dispositivos o tecnologías relacionadas con las comunicaciones y la transmisión de datos en una red.
+
+La principal diferencia es que un "mux" es un dispositivo físico que se utiliza para combinar señales, mientras que un "endpoint" es un término más general que se refiere a cualquier dispositivo o aplicación que se comunica con una red. Además, un "mux" se utiliza para combinar señales, mientras que un "endpoint" se utiliza para enviar o recibir datos en una red."
+
+----------------------------------------------------------
+
+Recordemos que el modulo para mantener el servidor encendido que habiamos trabajado es la Librería "fresh" de Go. 
+
+La misma una vez instalada: 
+
+ go get github.com/pilu/fresh
+
+Debería poder correrse con el comando:
+
+ fresh
+
+Pero sin embargo no funciona. Para poder correrlo debemos usar el comando: 
+
+ go run github.com/pilu/fresh
+
+De esta forma si podemos encender el servidor que escucha los cambios en vivo. 
+
+Otra posible solución es esta: 
+
+------------
+
+"Go ya no acepta instalar ejecutables mediante la funcion go get, entonces la ruta que usé fue:
+
+go install github.com/pilu/fresh@latest
+
+
+
+Esto como primera instancia, luego en las Variables de Entorno, en el directorio Path (General, o sea de la tabla inferior) inserté como entrada la ruta de trabajo (Workspace)...Go/Bin; o sea tengo ese directorio tanto en GOBIN como en Path, de esa forma fresh me empezó a funcionar perfectamente"
+
+------------
+
+Con el servidor levantado ya puedo usar Thunder Client o Postman para pegarle como cliente a la API y ver si me responde los msj que le deje seteados a cada handler en un primer momento o me devuelve la acción deseado en un segundo momento. Para ello debo pegarle a la siguiente dirección: 
+
+Para GET de todos los usuarios y POST: 
+
+http://localhost:5007/api/user/
+
+Para GET de un usuario y PUT y DELETE: 
+
+http://localhost:5007/api/user/{id:[0-9]+} (Variable con expresión regular que significa cualquier entreda que contenga numeros de 0 a 9 sin limite alguno)
+
+-------------
+
+Para que los retornos del lado del cliente vuelvan en minuscula (convención de trabaja json) debo agregar un "alias json" con comillas francesas (``) comenzando así en mi struct: 
+
+type User struct {
+	Id       int64  `json:"id"` //Alias para json
+	UserName string `json:"username"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+}
+
+output, _ := json.Marshal(users) // Devuelve los valores transformados en tipo Byte y un error. Por lo que debo capturar esos valores, transformarlos a string y devolverlo.
+
+Otra convención de la respuesta al cliente cuando le pegamos a una API es que la misma tenga un content-type = json y por el momento es de tipo texto plano
+
+content-type
+text/plain; charset=utf-8
+
+Para convertirla debo agregar dentro de mi function handler:
+
+rw.Header().Set("Content-Type", "application/json")
+
+De esa forma al volver a pegarle a mi endpoint me va a retornar en headers: 
+
+content-type
+application/json
+
+Que es lo que buscaba
+
+[
+  {
+    "id": 1,
+    "username": "MarianoGobea",
+    "password": "Pikachu123",
+    "email": "gobeamariano@gmail.com"
+  },
+  {
+    "id": 2,
+    "username": "NicoleReina",
+    "password": "TeAmo123",
+    "email": "nicolediosa@gmail.com"
+  },
+  {
+    "id": 3,
+    "username": "Lisandrito",
+    "password": "Capo123",
+    "email": "lichitacapo@gmail.com"
+  },
+  {
+    "id": 5,
+    "username": "Lauti",
+    "password": "Autiiiii123",
+    "email": "chulolauti@gmail.com"
+  }
+]
+
+-------------------------------
+
+Ahora bien, también podemos responder la petición del cliente en otros tipos de datos como adelantavamos arriba. Por ejemplo en XML: 
+
+Para eso modifico la estructura JSON en las siguiente partes con xml en lugar de json: 
+
+users.go:
+
+type User struct {
+	Id       int64  `xml:"id"` //Alias para xml
+	UserName string `xml:"username"`
+	Password string `xml:"password"`
+	Email    string `xml:"email"`
+}
+
+handlers.go:
+
+output, _ := xml.Marshal(users) // Devuelve los valores transformados en tipo Byte y un error. Por lo que debo capturar esos valores, transformarlos a string y devolverlo.
+
+rw.Header().Set("Content-Type", "text/xml")
+
+Cuando vuelvo a pegarle a la API desde el lado del cliente (Thunder Cliente) me devuelve la misma respuesta que antes solo que en xml que ve así: 
+
+<User><id>1</id><username>MarianoGobea</username><password>Pikachu123</password><email>gobeamariano@gmail.com</email></User><User><id>2</id><username>NicoleReina</username><password>TeAmo123</password><email>nicolediosa@gmail.com</email></User><User><id>3</id><username>Lisandrito</username><password>Capo123</password><email>lichitacapo@gmail.com</email></User><User><id>5</id><username>Lauti</username><password>Autiiiii123</password><email>chulolauti@gmail.com</email></User>
+
+----------------
+
+Otro tipo de dato que podemos devolver es yaml, para ello debemos primero instalar la librería "go/yaml": 
+
+ go get gopkg.in/yaml.v3
+
+Y luego modifico los archivos de forma muy similar a lo que hice con xml. Es decir: 
+
+users.go:
+
+type User struct {
+	Id       int64  `yaml:"id"` //Alias para yaml
+	UserName string `yaml:"username"`
+	Password string `yaml:"password"`
+	Email    string `yaml:"email"`
+}
+
+handlers.go:
+
+En este caso no tiene sentido modificar el content type del header dado que no existe un tipo de dato para yaml. Por lo que lo dejamos que retorne por default como texto plano. 
+
+Pero si debo modificar el output: 
+
+output, _ := yaml.Marshal(users) // Devuelve los valores transformados en tipo Byte y un error. Por lo que debo capturar esos valores, transformarlos a string y devolverlo.
+
+Listo! Vuelvo a pegarle al endpoint y la respuesta es: 
+
+- id: 1
+  username: MarianoGobea
+  password: Pikachu123
+  email: gobeamariano@gmail.com
+- id: 2
+  username: NicoleReina
+  password: TeAmo123
+  email: nicolediosa@gmail.com
+- id: 3
+  username: Lisandrito
+  password: Capo123
+  email: lichitacapo@gmail.com
+- id: 5
+  username: Lauti
+  password: Autiiiii123
+  email: chulolauti@gmail.com
+
+  Response Headers
+Header
+Value
+date
+Sat, 18 Mar 2023 16:11:24 GMT
+content-length
+335
+content-type
+text/plain; charset=utf-8
+connection
+close
+
+Despues de probar las tres formas de devolución vuelvo el codigo al formato json porque es el mas usado y el que mas me gusta :) !!!
+
+----------------------------
+
+Para buscar, editar, eliminar o ingresar registros individuales a mi base de datos mediante consulta del cliente a mi endpoint es necesario que yo retenga la información que el cliente me envía en la URL. En este ejemplo el id. Por tal motivo debo usar la librería "gorilla/mux" para trabajar con esa información. 
+
+// Obtener ID: Debo capturar el id que envía el cliente mediante url en su consulta al endpoint. Eso lo hacemos con "gorilla/mux"
+
+vars := mux.Vars(r)                   // Devuelve mapa de tipo string. Pero yo necesito un entero para mi func GetUser() por lo que debo transformarlo primero.
+
+userId, _ := strconv.Atoi(vars["id"]) // Convierto a entero con strconv.Atoi()
+
+Luego de esto ya puedo usar la variable userId para enviar como parametro a la función que construimos en la unidad anterior llamada models.GetUser(userId)
+
+Ahora cuando en mi consulta al endpoint pida el user 1 me devolverá la info del user 1 dado que ya no está hardcodeada. 
+
+Ejemplo de consulta: 
+
+GET / http://localhost:5007/api/user/5
+
+Ejemplo de respuesta: 
+
+{
+  "id": 5,
+  "username": "Lauti",
+  "password": "Autiiiii123",
+  "email": "chulolauti@gmail.com"
+}
+
+-------------------------------------
+
+Ingresar un registro por API-REST
+
+Armo mi función handler CreateUser así: 
+
+func CreateUser(rw http.ResponseWriter, r *http.Request) {
+
+	// Crear un registro nuevo en MySQL mediante el cliente pegandole al endpoint creado para tales fines:
+
+	rw.Header().Set("Content-Type", "application/json")
+
+	// En este caso ya no alcanza con obtener solo el id. Sino que debemos obtener todo el registro (salvo el id que lo traigo de la base) que vamos a recibir para pasarselo a la función models.CreateUser()
+
+	user := models.User{} // Struct vacio que voy a completar.
+
+	decoder := json.NewDecoder(r.Body) // Obtiene el cuerpo del request y lo decofica de tipo json a tipo objeto
+
+	// El metodo Decode carga los datos del request body al objeto construido vacio. Si lo logra no devuelve nada, pero si no lo logra devuelve un error que debemos manejar.
+	if err := decoder.Decode(&user); err != nil {
+		fmt.Fprintln(rw, http.StatusUnprocessableEntity)
+	} else {
+		db.Connect()
+		user.Save() // Metodo de user que verifica si el id existe o no y en función de ello registra uno nuevo o edita.
+		db.Close()
+	}
+
+	output, _ := json.Marshal(user)
+	fmt.Fprintln(rw, string(output)) // Devolvemos igual el usuario creado. Los parametros de la creación se deben pasar por el "Body" de la consulta al endpoint
+}
+
+Cuando hago mi consulta como cliente, por ej en Thunder Client, voy a cambiar el metodo a POST y enviar ademas de la petición un "Body" con todos los atributos del user menos "id": 
+
+Ejemplo: 
+
+POST / http://localhost:5007/api/user/
+
+En el cuerpo (Importante que verifiquemos que el mismo sea de tipo json si así lo vamos a pasar): 
+
+{
+  "username": "Chorizo",
+  "password": "elGatoDeLaCasa",
+  "email": "choricampeon@gmail.com"
+}
+
+Y me va a retornar (Porque así lo establecí en la función handler pero podría tranquilamente no retornar nada.):
+
+{
+  "id": 6,
+  "username": "Chorizo",
+  "password": "elGatoDeLaCasa",
+  "email": "choricampeon@gmail.com"
+}
+
+---------------------
+
+Ahora voy a actualizar 1 o mas atributos de un usuario en especifico pasado por url: 
+
+func UpdateUser(rw http.ResponseWriter, r *http.Request) {
+	// Actualizar un registro existente y que se pasa por request en MySQL mediante el cliente pegandole al endpoint creado para tales fines:
+
+	rw.Header().Set("Content-Type", "application/json")
+
+	// Obtener ID: Debo capturar el id que envía el cliente mediante url (ya que ese es el usuario que me tengo que traer para editar) en su consulta al endpoint. Eso lo hacemos con "gorilla/mux"
+	vars := mux.Vars(r)                   // Devuelve mapa de tipo string. Pero yo necesito un entero para mi func GetUser() por lo que debo transformarlo primero.
+	userId, _ := strconv.Atoi(vars["id"]) // Convierto a entero con strconv.Atoi()
+
+	// Obtener un usuario de mi base de datos
+	db.Connect()
+
+	user := models.GetUser(userId) // Me traigo al usuario que pidió el cliente
+
+	db.Close()
+
+	decoder := json.NewDecoder(r.Body) // Obtiene el cuerpo del request y lo decofica de tipo json a tipo objeto
+
+	// El metodo Decode carga los datos del request body al objeto user traido de mi base de datos. Si lo logra no devuelve nada, pero si no lo logra devuelve un error que debemos manejar.
+	if err := decoder.Decode(&user); err != nil {
+		fmt.Fprintln(rw, http.StatusUnprocessableEntity)
+	} else {
+		db.Connect()
+		user.Save() // Metodo de user que verifica si el id existe o no y en función de ello registra uno nuevo o edita.
+		db.Close()
+	}
+
+	output, _ := json.Marshal(user)
+	fmt.Fprintln(rw, string(output)) // Devolvemos igual el usuario creado. Los parametros de la creación se deben pasar por el "Body" de la consulta al endpoint
+}
+
+--- Voy al cliente ---
+
+PUT / http://localhost:5007/api/user/1
+
+En el cuerpo envío el o los dato/s a cambiar con clave:valor:
+
+Ej: 
+
+{
+  "email": "prueba_metodo_put@gmail.com"
+}
+
+Y me devuelve: 
+
+{
+  "id": 1,
+  "username": "MarianoGobea",
+  "password": "Pikachu123",
+  "email": "prueba_metodo_put@gmail.com"
+}
+
+Es decir, solo modifica el parametro email del user pasado por url. En este caso el 1
+
+---------------
+
+Finalmente para eliminar con un request a la API-REST de tipo DELETE debemos configurar la function handler de la URL así: 
+
+func DeleteUser(rw http.ResponseWriter, r *http.Request) {
+	// Obtener ID: Debo capturar el id que envía el cliente mediante url (ya que ese es el usuario que me tengo que traer para editar) en su consulta al endpoint. Eso lo hacemos con "gorilla/mux"
+	vars := mux.Vars(r)                   // Devuelve mapa de tipo string. Pero yo necesito un entero para mi func GetUser() por lo que debo transformarlo primero.
+	userId, _ := strconv.Atoi(vars["id"]) // Convierto a entero con strconv.Atoi()
+
+	// Obtener un usuario de mi base de datos
+	db.Connect()
+
+	user := models.GetUser(userId) // Me traigo al usuario que pidió el cliente
+	user.Delete()                  // Uso el metodo Delete para eliminarlo de mi base de datos.
+
+	db.Close()
+
+	output, _ := json.Marshal(user)
+	fmt.Fprintln(rw, string(output)) // Devolvemos igual el usuario creado. Los parametros de la creación se deben pasar por el "Body" de la consulta al endpoint
+}
+
+Y al correr la request así: 
+
+DELETE / http://localhost:5007/api/user/8
+
+Me va a devolver el registro que eliminó de la database. Cuestion que puedo comprobar por API o por Query en MySQL: 
+
+{
+  "id": 8,
+  "username": "PruebaDelete",
+  "password": "LaPruebaDelete123",
+  "email": "Delete_desde_client@gmail.com"
+}
+
+Reviso entonces los registros que me quedan: 
+
+[
+  {
+    "id": 1,
+    "username": "MarianoGobea",
+    "password": "Pikachu123",
+    "email": "prueba_metodo_put@gmail.com"
+  },
+  {
+    "id": 2,
+    "username": "NicoleReina",
+    "password": "TeAmo123",
+    "email": "nicolediosa@gmail.com"
+  },
+  {
+    "id": 3,
+    "username": "Lisandrito",
+    "password": "Capo123",
+    "email": "lichitacapo@gmail.com"
+  },
+  {
+    "id": 5,
+    "username": "Lauti",
+    "password": "Autiiiii123",
+    "email": "chulolauti@gmail.com"
+  },
+  {
+    "id": 6,
+    "username": "Chorizo",
+    "password": "elGatoDeLaCasa",
+    "email": "choricampeon@gmail.com"
+  },
+  {
+    "id": 7,
+    "username": "LaLisa",
+    "password": "DemonioDeTasmania123",
+    "email": "regaladasoycara@gmail.com"
+  }
+]
+
+Y efectivamente el 8 fue eliminado. 
