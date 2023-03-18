@@ -30,6 +30,6 @@ import (
 
 Podemos crear tablas directamente desde Golang. En lugar de tener que crearlas desde nuestro motor de bases.
 
-db.Exec() Metodo para crear tablas
+db.Exec() Metodo para crear tablas. En realidad se usa para consultas que modifican nuestra/s base/s de datos. 
 
-db.Query() Metodo para ejecutar Querys en mi motor MySQL desde mi codigo Golang
+db.Query() Metodo para ejecutar Querys en mi motor MySQL desde mi codigo Golang. Se usa para obtener información de nuestras bases de datos sin modificación alguna. 

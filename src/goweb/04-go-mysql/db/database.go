@@ -68,7 +68,7 @@ func Ping() {
 func CreateTable(schema string, name string) {
 
 	if !ExistsTable(name) {
-		_, err := db.Exec(schema)
+		_, err := Exec(schema)
 		if err != nil {
 			fmt.Println("Error:", err)
 		}
@@ -89,10 +89,38 @@ func CreateTable(schema string, name string) {
 // Función para verificar si una tabla existe o no:
 func ExistsTable(tableName string) bool {
 	sql := fmt.Sprintf("SHOW TABLES LIKE '%s'", tableName)
-	rows, err := db.Query(sql)
+	rows, err := Query(sql)
 
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
 	return rows.Next() // Si puede recorrer la table retorna true y si no puede recorrer la tabla retorna false
+}
+
+// Función para hacer Truncate Table: Eliminar todos los registros de una tabla o reiniciar los registros de una tabla que es lo mismo:
+
+func TruncateTable(tableName string) {
+	sql := fmt.Sprintf("TRUNCATE %s;", tableName)
+	Exec(sql)
+}
+
+// Polimorfismo de Exec (db.Exec() de la librería "database/sql"):
+func Exec(query string, args ...interface{}) (sql.Result, error) {
+	result, err := db.Exec(query, args...)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return result, err
+}
+
+// Polimorfismo de Query (db.Query() de la librería "database/sql"):
+func Query(query string, args ...interface{}) (*sql.Rows, error) {
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return rows, err
+
 }
