@@ -433,3 +433,15 @@ Luego podemos armar un modelo de respuesta mas completo con responde.go donde no
 models/response.go
 
 Y luego debo adaptar el codigo de mis handlers. El viejo codigo lo voy a conservar también en un nuevo paquete llamado HandlersWithoutResponse
+
+------------------------------------------
+
+Proximo Tema Librería GORM: 
+
+"GORM es una librería de mapeo objeto-relacional (ORM) para el lenguaje de programación Go. Su objetivo principal es proporcionar una forma fácil y rápida de interactuar con bases de datos relacionales desde una aplicación escrita en Go.
+
+La utilidad de GORM radica en su capacidad para abstraer las complejidades del acceso a la base de datos y permitir al programador interactuar con ella utilizando objetos y métodos familiares en Go. De esta manera, se puede utilizar GORM para crear, leer, actualizar y eliminar (CRUD) registros en una base de datos relacional sin tener que escribir directamente SQL.
+
+GORM está diseñado para funcionar con varios motores de bases de datos relacionales, incluyendo MySQL, PostgreSQL, SQLite y Microsoft SQL Server. Además, proporciona funcionalidades avanzadas como la creación automática de tablas y relaciones, transacciones y consultas avanzadas utilizando el lenguaje de consulta de objetos (OQL).
+
+En resumen, GORM facilita la interacción con bases de datos relacionales en Go, permitiendo a los programadores trabajar con objetos familiares en lugar de tener que escribir SQL directamente."

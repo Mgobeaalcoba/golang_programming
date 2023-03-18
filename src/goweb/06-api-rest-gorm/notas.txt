@@ -1,0 +1,37 @@
+Recordatorio: Comando para correr el online server de fresh: 
+ go run github.com/pilu/fresh
+
+-----------------------------------------------------------
+
+¿Que es GORM de Go, cual es su utilidad y que relación tiene con las bases de datos relacionales? 
+
+"GORM es una librería de mapeo objeto-relacional (ORM) para el lenguaje de programación Go. Su objetivo principal es proporcionar una forma fácil y rápida de interactuar con bases de datos relacionales desde una aplicación escrita en Go.
+
+La utilidad de GORM radica en su capacidad para abstraer las complejidades del acceso a la base de datos y permitir al programador interactuar con ella utilizando objetos y métodos familiares en Go. De esta manera, se puede utilizar GORM para crear, leer, actualizar y eliminar (CRUD) registros en una base de datos relacional sin tener que escribir directamente SQL.
+
+GORM está diseñado para funcionar con varios motores de bases de datos relacionales, incluyendo MySQL, PostgreSQL, SQLite y Microsoft SQL Server. Además, proporciona funcionalidades avanzadas como la creación automática de tablas y relaciones, transacciones y consultas avanzadas utilizando el lenguaje de consulta de objetos (OQL).
+
+En resumen, GORM facilita la interacción con bases de datos relacionales en Go, permitiendo a los programadores trabajar con objetos familiares en lugar de tener que escribir SQL directamente."
+
+¿Que significa GORM y ORM? 
+
+"GORM es un acrónimo de "Go Object Relational Mapping" mientras que ORM es un acrónimo de "Object Relational Mapping".
+
+ORM es una técnica de programación que permite mapear objetos en un lenguaje de programación a tablas en una base de datos relacional. De esta manera, se puede interactuar con una base de datos utilizando objetos y métodos familiares en lugar de tener que escribir SQL directamente.
+
+GORM es una librería de mapeo objeto-relacional (ORM) específica para el lenguaje de programación Go. Como ORM, GORM permite a los programadores interactuar con bases de datos relacionales utilizando objetos y métodos en lugar de escribir SQL directamente."
+
+---------------------
+
+1- Elimino todo archivo go.mod y go.sum que tenga en el proyecto si es que lo copie de otro. 
+2- Instalo gorm con el siguiente comando: 
+ go get gorm.io/gorm
+3- Instalo nuevos drivers para MySQL que son especificos de GORM y están en su documentación oficial ( https://gorm.io/index.html ):
+ go get gorm.io/driver/mysql
+4- Instalo también gorilla/mux ya que lo voy a seguir usando al trabajar con GORM: 
+ go get github.com/gorilla/mux
+5- Los handlers los tengo que importar en main.go de mi nuevo modulo armado para esta unidad que ya no se llama apirest sino gorm. Por lo que cambio ese import en main.go: 
+ import (
+	"gorm/handlers")
+6- Lo mismo hago en users.go y handlers.go
+7- 
