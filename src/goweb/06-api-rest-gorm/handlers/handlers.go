@@ -2,83 +2,99 @@ package handlers
 
 import (
 	"encoding/json"
+	"gorm/db"
 	"gorm/models"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"gorm.io/gorm"
 )
+
+// Importante pasar a GORM los objetos con puntero (Lo objeto mismo y no una copia) para que funcione de forma correcta!!!
 
 func GetUsers(rw http.ResponseWriter, r *http.Request) {
 
-	if users, err := models.ListUsers(); err != nil {
-		models.SendNotFound(rw)
-		//models.SendData(rw, users)
-	} else {
-		//models.SendNotFound(rw) // La data es users
-		models.SendData(rw, users)
-	}
+	// Devuelve todos los registros: por lo que si no tenemos ninguno no es necesario manejar errores sino que devolvemos la lista vacia:
+
+	users := models.Users{} // Creo una estructura vacia de users.
+
+	// Con GORM obtener todos los datos de nuestra base de datos es mucho mas facil aún ya que no necesitamos querys...
+
+	db.Database.Find(&users) // En users debe guardar todos los datos de la tabla users
+
+	sendData(rw, users, http.StatusOK) // Armamos la respuesta para el cliente.
 
 }
 
 func GetUser(rw http.ResponseWriter, r *http.Request) {
 
-	if user, err := getUserByRequest(r); err != nil {
-		models.SendNotFound(rw)
+	if user, err := getUserById(r); err != nil {
+		sendError(rw, http.StatusNotFound)
 	} else {
-		models.SendData(rw, user)
+		sendData(rw, user, http.StatusOK)
+	}
+
+}
+
+func getUserById(r *http.Request) (models.User, *gorm.DB) {
+
+	//Obtener ID del request del cliente:
+	vars := mux.Vars(r)
+	userId, _ := strconv.Atoi(vars["id"])
+	user := models.User{}
+	if err := db.Database.First(&user, userId); err.Error != nil {
+		return user, err
+	} else {
+		return user, nil
 	}
 }
 
 func CreateUser(rw http.ResponseWriter, r *http.Request) {
 
-	user := models.User{}              // Struct vacio que voy a completar.
-	decoder := json.NewDecoder(r.Body) // Obtiene el cuerpo del request y lo decofica de tipo json a tipo objeto
+	user := models.User{}
+	decoder := json.NewDecoder(r.Body)
 
-	// El metodo Decode carga los datos del request body al objeto construido vacio. Si lo logra no devuelve nada, pero si no lo logra devuelve un error que debemos manejar.
 	if err := decoder.Decode(&user); err != nil {
-		models.SendUnprocessableEntity(rw)
+		sendError(rw, http.StatusUnprocessableEntity)
 	} else {
-		user.Save() // Metodo de user que verifica si el id existe o no y en función de ello registra uno nuevo o edita.
-		models.SendData(rw, user)
+		db.Database.Save(&user) // Metodo de GORM que guarda un nuevo registro en nuestra base de datos.
+		sendData(rw, user, http.StatusOK)
 	}
 }
 
 func UpdateUser(rw http.ResponseWriter, r *http.Request) {
 
-	if user, err := getUserByRequest(r); err != nil {
-		models.SendUnprocessableEntity(rw)
-	} else {
-		decoder := json.NewDecoder(r.Body) // Obtiene el cuerpo del request y lo decofica de tipo json a tipo objeto
+	//Obtener registro:
+	var userId int64
 
-		// El metodo Decode carga los datos del request body al objeto user traido de mi base de datos. Si lo logra no devuelve nada, pero si no lo logra devuelve un error que debemos manejar.
+	if user_ant, err := getUserById(r); err != nil {
+		sendError(rw, http.StatusNotFound) // No encontrar un registro es un "Status Not Found"
+	} else {
+		userId = user_ant.Id
+
+		user := models.User{}
+		decoder := json.NewDecoder(r.Body)
+
 		if err := decoder.Decode(&user); err != nil {
-			models.SendUnprocessableEntity(rw)
+			sendError(rw, http.StatusUnprocessableEntity)
 		} else {
-			user.Save() // Metodo de user que verifica si el id existe o no y en función de ello registra uno nuevo o edita.
-			models.SendData(rw, user)
+			user.Id = userId
+			db.Database.Save(&user) // Metodo de GORM que guarda un nuevo registro en nuestra base de datos.
+			sendData(rw, user, http.StatusOK)
 		}
 	}
+
 }
 
 func DeleteUser(rw http.ResponseWriter, r *http.Request) {
 
-	if user, err := getUserByRequest(r); err != nil {
-		models.SendUnprocessableEntity(rw)
-	} else {
-		models.SendData(rw, user)
-		user.Delete() // Uso el metodo Delete para eliminarlo de mi base de datos.
-	}
-}
+	//Obtener registro:
 
-func getUserByRequest(r *http.Request) (*models.User, error) {
-	//Obtener ID del request del cliente:
-
-	vars := mux.Vars(r)
-	userId, _ := strconv.Atoi(vars["id"])
-	if user, err := models.GetUser(userId); err != nil {
-		return nil, err
+	if user, err := getUserById(r); err != nil {
+		sendError(rw, http.StatusNotFound) // No encontrar un registro es un "Status Not Found"
 	} else {
-		return user, nil
+		sendData(rw, user, http.StatusOK)
+		db.Database.Delete(&user)
 	}
 }

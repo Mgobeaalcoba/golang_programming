@@ -34,4 +34,3 @@ GORM es una librería de mapeo objeto-relacional (ORM) específica para el lengu
  import (
 	"gorm/handlers")
 6- Lo mismo hago en users.go y handlers.go
-7- 
