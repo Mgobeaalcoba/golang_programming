@@ -2,86 +2,60 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
-func biggerIsGreater(w string) string {
+func getTotalX(a []int32, b []int32) int32 {
+	var count int32 = 0
+	myList := []int32{}
+	var validate bool = true
 
-	arrayString := strings.Split(w, "")
-	copiaArray := make([]string, len(arrayString)) // Armo un array vacio independiente del anterior
-	copy(copiaArray, arrayString)                  // Copio mi array original en el segundo para luego compararlos
-	var init int = len(arrayString)
-
-	for i := len(arrayString) - 1; i >= 0; i-- {
-		for j := i - 1; j >= 0; j-- {
-			count1j := 1
-			if arrayString[i] > arrayString[j] {
-				aux := arrayString[j]
-				arrayString[j] = arrayString[i]
-				arrayString[i] = aux
-				init = j + 1
-				fmt.Println("J vale:", j, ".I vale:", i)
-				fmt.Println("Entro en este primer ciclo:", count1j, "veces")
-				fmt.Println("Así está el string recibido en el primer ciclo:", arrayString)
-				count1j += 1
+	for i := a[0]; i <= b[0]; i++ {
+		for _, value := range a {
+			//fmt.Println("value:", value)
+			//fmt.Println("i:", i)
+			if i%value == 0 {
+				continue
+			} else {
+				validate = false
 				break
 			}
 		}
-		fmt.Println("copiaArray:", copiaArray)
-		fmt.Println("arrayString:", arrayString)
-		if strings.Join(copiaArray, "") != strings.Join(arrayString, "") {
-			break
+		if validate {
+			//fmt.Println("Agregado a la lista:", i)
+			myList = append(myList, int32(i))
 		}
+		validate = true
 	}
-	if init < len(arrayString)-1 {
-		for i := init; i < len(arrayString); i++ {
-			//count2i := 1
-			for j := i + 1; j < len(arrayString); j++ {
-				count1j := 1
-				if arrayString[i] > arrayString[j] {
-					aux := arrayString[j]
-					arrayString[j] = arrayString[i]
-					arrayString[i] = aux
-					fmt.Println("Entro en este segundo ciclo:", count1j, "veces")
-					fmt.Println("Así está el string recibido:", arrayString)
-					count1j += 1
-				}
+
+	//fmt.Println("Imprimo mi lista a mitad de proceso:")
+	//fmt.Println(myList)
+
+	validate = true
+
+	for _, valueMyList := range myList {
+		for _, valueB := range b {
+			//fmt.Println("valueB:", valueB)
+			//fmt.Println("valueMyList:", valueMyList)
+			if valueB%valueMyList == 0 {
+				continue
+			} else {
+				validate = false
+				break
 			}
 		}
+		if validate {
+			count += 1
+		}
+		validate = true
 	}
-	if strings.Join(copiaArray, "") != strings.Join(arrayString, "") {
-		return strings.Join(arrayString, "")
-	} else {
-		return "no answer"
-	}
+
+	return count
+
 }
 
 func main() {
-	cadena := "dkhc" // Respuesta esperada: hcdk // No dkch
-	fmt.Println("Cadena enviada:", cadena)
-	fmt.Println("Cadena devuelta:", biggerIsGreater(cadena))
-	fmt.Println()
-	cadena2 := "dhck" // Respuesta esperada: dhkc // No dkch
-	fmt.Println("Cadena2 enviada:", cadena2)
-	fmt.Println("Cadena2 devuelta:", biggerIsGreater(cadena2))
-	fmt.Println()
-	cadena3 := "hefg" // Respuesta esperada: hegf // No dkch
-	fmt.Println("cadena3 enviada:", cadena3)
-	fmt.Println("cadena3 devuelta:", biggerIsGreater(cadena3))
-	fmt.Println()
-	cadena4 := "bb" // Respuesta esperada: bb o "no answer" // No dkch
-	fmt.Println("cadena4 enviada:", cadena4)
-	fmt.Println("cadena4 devuelta:", biggerIsGreater(cadena4))
-	fmt.Println()
+	a := []int32{2, 4}
+	b := []int32{16, 32, 96}
 
-	cadena5 := "abdc" // Respuesta esperada: acbd // No acdb
-	fmt.Println("cadena5 enviada:", cadena5)
-	fmt.Println("cadena5 devuelta:", biggerIsGreater(cadena5))
-	fmt.Println()
-
-	cadena6 := "xildrrhpca" // Respuesta esperada: xildrrpach
-	fmt.Println("cadena6 enviada:", cadena6)
-	fmt.Println("cadena6 devuelta:", biggerIsGreater(cadena6))
-	fmt.Println()
-
+	fmt.Println(getTotalX(a, b))
 }
